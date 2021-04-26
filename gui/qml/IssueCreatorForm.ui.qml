@@ -8,12 +8,12 @@ GridLayout {
     columns: 2
 
     Label {
-        id: label6
+        id: lblProject
         text: qsTr("Project")
     }
 
     ComboBox {
-        id: project
+        id: cmbProject
         objectName: "project"
         Layout.fillWidth: true
         model: projectModel
@@ -21,12 +21,12 @@ GridLayout {
     }
 
     Label {
-        id: label1
+        id: lblTracker
         text: qsTr("Tracker")
     }
 
     ComboBox {
-        id: tracker
+        id: cmbTracker
         objectName: "tracker"
         Layout.fillWidth: true
         model: trackerModel
@@ -35,12 +35,12 @@ GridLayout {
     }
 
     Label {
-        id: label2
+        id: lblSubject
         text: qsTr("Subject")
     }
 
     TextField {
-        id: subject
+        id: txtSubject
         Layout.fillWidth: true
         objectName: "subject"
         enabled: false
@@ -48,7 +48,7 @@ GridLayout {
     }
 
     Label {
-        id: label4
+        id: lblParentIssue
         text: qsTr("Parent issue")
     }
 
@@ -56,50 +56,50 @@ GridLayout {
         Layout.fillWidth: true
 
         TextField {
-            id: parentIssue
+            id: txtParentIssue
             Layout.fillWidth: true
             objectName: "parentIssue"
             enabled: false
         }
 
         Button {
-            id: useCurrentIssue
+            id: btnUseCurrentIssue
             Layout.preferredHeight: 24
             Layout.preferredWidth: 24
             objectName: "useCurrentIssue"
             iconSource: "qrc:/open-iconic/svg/vertical-align-bottom.svg"
-            tooltip: "Use the last tracked issue as parent issue"
+            tooltip: qsTr("Use the last tracked issue as parent issue")
             enabled: false
         }
 
         Button {
-            id: useCurrentIssueParent
+            id: btnUseCurrentIssueParent
             Layout.preferredHeight: 24
             Layout.preferredWidth: 24
             objectName: "useCurrentIssueParent"
             iconSource: "qrc:/open-iconic/svg/vertical-align-top.svg"
-            tooltip: "Use the last tracked issue's parent as parent issue (default)"
+            tooltip: qsTr("Use the last tracked issue's parent as parent issue (default)")
             enabled: false
         }
 
         Button {
-            id: selectParentIssue
+            id: btnSelectParentIssue
             Layout.preferredHeight: 24
             Layout.preferredWidth: 24
             objectName: "selectParentIssue"
             iconSource: "qrc:/open-iconic/svg/list.svg"
-            tooltip: "Select parent issue from list"
+            tooltip: qsTr("Select parent issue from list")
             enabled: false
         }
     }
 
     Label {
-        id: label9
+        id: lblAssignee
         text: qsTr("Assignee")
     }
 
     ComboBox {
-        id: assignee
+        id: cmbAssignee
         objectName: "assignee"
         Layout.fillWidth: true
         model: assigneeModel
@@ -108,12 +108,12 @@ GridLayout {
     }
 
     Label {
-        id: label7
+        id: lblCatgory
         text: qsTr("Category")
     }
 
     ComboBox {
-        id: category
+        id: bmbCategory
         objectName: "category"
         Layout.fillWidth: true
         model: categoryModel
@@ -122,12 +122,12 @@ GridLayout {
     }
 
     Label {
-        id: label8
+        id: lblTarget
         text: qsTr("Target version")
     }
 
     ComboBox {
-        id: version
+        id: cmdVersion
         objectName: "version"
         Layout.fillWidth: true
         model: versionModel
@@ -143,12 +143,12 @@ GridLayout {
     }
 
     Label {
-        id: label10
+        id: lblDueDate
         text: qsTr("Due date")
     }
 
     TextField {
-        id: dueDate
+        id: txtDueDate
         placeholderText: "2016-01-01"
         Layout.fillWidth: true
         objectName: "dueDate"
@@ -156,12 +156,12 @@ GridLayout {
     }
 
     Label {
-        id: label5
+        id: lblEstimatedDate
         text: qsTr("Estimated time")
     }
 
     TextField {
-        id: estimatedTime
+        id: txtEstimatedTime
         placeholderText: "02:00:00"
         Layout.fillWidth: true
         objectName: "estimatedTime"
@@ -169,12 +169,12 @@ GridLayout {
     }
 
     Label {
-        id: label3
+        id: lblDescription
         text: qsTr("Description")
     }
 
     TextArea {
-        id: description
+        id: txtDescription
         Layout.minimumHeight: 100
         Layout.fillHeight: true
         Layout.fillWidth: true
@@ -188,7 +188,7 @@ GridLayout {
         Layout.columnSpan: 2
 
         Button {
-            id: create
+            id: btnCreate
             objectName: "create"
             text: qsTr("Create")
             enabled: false
@@ -196,7 +196,7 @@ GridLayout {
         }
 
         Button {
-            id: cancel
+            id: btnCancel
             objectName: "cancel"
             text: qsTr("Cancel")
         }

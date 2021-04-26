@@ -1,8 +1,8 @@
 import QtQuick 2.5
 
 Item {
-    height: 420
-    width: 420
+    height: 400
+    width: 524
 
     SettingsForm {
         anchors.margins: 5

@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QTranslator>
 
 using namespace redtimer;
 using namespace std;
@@ -10,6 +11,11 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     QApplication app( argc, argv );
+    
+    QTranslator myTranslator;
+    myTranslator.load("i18n\\redtimer_" + QLocale::system().name());
+    app.installTranslator(&myTranslator);
+  
     app.setApplicationName( "RedTimer" );
 
     app.setQuitOnLastWindowClosed( false );

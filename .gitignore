@@ -81,3 +81,4 @@ RedTimer
 /Release/.qmake.stash
 cli/redtimercli
 dist
+build.cmd

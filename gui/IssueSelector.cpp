@@ -170,7 +170,7 @@ IssueSelector::loadAssignees()
         // Clear and set first item at once and not wait for callback
         assigneeId_ = NULL_ID;
         assigneeModel_.clear();
-        assigneeModel_.push_back( SimpleItem(NULL_ID, "Choose assignee") );
+        assigneeModel_.push_back( SimpleItem(NULL_ID, tr("Choose assignee")) );
         qml("assignee")->setProperty( "currentIndex", -1 );
         qml("assignee")->setProperty( "currentIndex", 0 );
         RETURN();
@@ -198,7 +198,7 @@ IssueSelector::loadAssignees()
 
         // Reset in case this has changed since calling loadAssignees()
         assigneeModel_.clear();
-        assigneeModel_.push_back( SimpleItem(NULL_ID, "Choose assignee") );
+        assigneeModel_.push_back( SimpleItem(NULL_ID, tr("Choose assignee")) );
 
         // Sort assignees by name
         sort( assignees.begin(), assignees.end(),
@@ -314,7 +314,7 @@ IssueSelector::loadProjects()
 
         // Reset in case this has changed since calling loadProjects()
         projectModel_.clear();
-        projectModel_.push_back( SimpleItem(NULL_ID, "Choose project") );
+        projectModel_.push_back( SimpleItem(NULL_ID, tr("Choose project")) );
 
         for( const auto& project : projects )
         {
@@ -348,7 +348,7 @@ IssueSelector::loadVersions()
         // Clear and set first item at once and not wait for callback
         versionId_ = NULL_ID;
         versionModel_.clear();
-        versionModel_.push_back( SimpleItem(NULL_ID, "Choose version") );
+        versionModel_.push_back( SimpleItem(NULL_ID, tr("Choose version")) );
         qml("version")->setProperty( "currentIndex", -1 );
         qml("version")->setProperty( "currentIndex", 0 );
         RETURN();
@@ -376,7 +376,7 @@ IssueSelector::loadVersions()
 
         // Reset in case this has changed since calling loadVersions()
         versionModel_.clear();
-        versionModel_.push_back( SimpleItem(NULL_ID, "Choose version") );
+        versionModel_.push_back( SimpleItem(NULL_ID, tr("Choose version")) );
 
         // Sort versions by due date
         sort( versions.begin(), versions.end(),

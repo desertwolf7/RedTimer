@@ -31,14 +31,14 @@ Item {
         anchors.top: parent.top
 
         Button {
-            id: createIssue
+            id: btnCreateIssue
             width: 24
             height: 24
             objectName: "createIssue"
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: 0
             anchors.left: parent.left
-            tooltip: "Create new issue"
+            tooltip: qsTr("Create new issue")
             iconSource: "qrc:/open-iconic/svg/plus.svg"
         }
 
@@ -49,9 +49,9 @@ Item {
             objectName: "connectionStatus"
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: reload.left
-            tooltip: "Connection status"
+            tooltip: qsTr("Connection status")
             iconSource: "qrc:/open-iconic/svg/signal.svg"
-            style: ButtonStyle{
+            style: ButtonStyle {
                 background: Rectangle {
                     id: connectionStatusStyle
                     objectName: "connectionStatusStyle"
@@ -67,7 +67,7 @@ Item {
             objectName: "reload"
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: settings.left
-            tooltip: "Reload"
+            tooltip: qsTr("Reload")
             iconSource: "qrc:/open-iconic/svg/reload.svg"
         }
 
@@ -78,7 +78,7 @@ Item {
             objectName: "settings"
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            tooltip: "Open Settings"
+            tooltip: qsTr("Open Settings")
             iconSource: "qrc:/open-iconic/svg/cog.svg"
         }
     }
@@ -114,7 +114,7 @@ Item {
                 Layout.preferredWidth: 24
                 objectName: "selectIssue"
                 iconSource: "qrc:/open-iconic/svg/list.svg"
-                tooltip: "Select issue from list"
+                tooltip: qsTr("Select issue from list")
             }
         }
 
@@ -186,7 +186,7 @@ Item {
                 objectName: "startStop"
                 isDefault: true
                 iconSource: "qrc:/open-iconic/svg/media-play.svg"
-                tooltip: "Start time tracking"
+                tooltip: qsTr("Start time tracking")
                 focus: true
                 activeFocusOnPress: true
             }

@@ -15,6 +15,8 @@ SOURCES += main.cpp \
 HEADERS += \
     CommandSender.h
 
+TRANSLATIONS += ../i18n/redtimercli_ru.ts
+
 # External projects
 include($$PWD/../libqtredmine/qtredmine.pri)
 include($$PWD/../libredtimer/libredtimer.pri)

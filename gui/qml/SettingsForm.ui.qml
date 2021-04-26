@@ -4,21 +4,40 @@ import QtQuick.Layouts 1.2
 
 ColumnLayout {
     id: columnLayout1
+    x: 0
+    y: 0
+    width: 524
+    height: 500
+    spacing: 0
 
     TabView {
-        id: tabView1
+        id: tabSettings
+        x: 2
+        y: 0
+        width: 520
+        tabPosition: 1
+        Layout.preferredWidth: -1
+        Layout.rowSpan: 0
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        Layout.columnSpan: 0
+        Layout.leftMargin: 0
         currentIndex: 0
         Layout.fillHeight: true
         Layout.fillWidth: true
         frameVisible: false
 
         Tab {
-            id: tab1
+            id: tabConnection
+            y: 0
+            clip: false
+            visible: true
+            scale: 1
             title: qsTr("Connection")
             active: true
 
             GridLayout {
                 id: gridLayout3
+                y: 0
                 anchors.fill: parent
                 columns: 2
 
@@ -29,6 +48,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblConnectionURL
                     text: qsTr("Redmine connection URL")
                 }
 
@@ -40,6 +60,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblAPIKey
                     text: qsTr("Redmine API key")
                 }
 
@@ -51,6 +72,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblMaxRecentIssues
                     text: qsTr("Maximum recent issues")
                 }
 
@@ -62,6 +84,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblWorkedIssueStatus
                     text: qsTr("Worked on issue status")
                 }
 
@@ -75,6 +98,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblDefaultTracker
                     text: qsTr("Default tracker")
                 }
 
@@ -102,7 +126,8 @@ ColumnLayout {
                 }
 
                 Label {
-                    text: "\t" + qsTr("External ID field")
+                    id: lblExternalIDField
+                    text: qsTr("\tExternal ID field")
                 }
 
                 ComboBox {
@@ -115,7 +140,8 @@ ColumnLayout {
                 }
 
                 Label {
-                    text: "\t" + qsTr("Start time field")
+                    id: lblStartTimeField
+                    text: qsTr("\tStart time field")
                 }
 
                 ComboBox {
@@ -128,7 +154,8 @@ ColumnLayout {
                 }
 
                 Label {
-                    text: "\t" + qsTr("End time field")
+                    id: lblEndTimeField
+                    text: qsTr("\tEnd time field")
                 }
 
                 ComboBox {
@@ -138,6 +165,32 @@ ColumnLayout {
                     objectName: "endTime"
                     model: endTimeModel
                     textRole: "name"
+                }
+
+                Label {
+                    id: lblDateTimeFormat
+                    text: qsTr("\tDate and time format")
+                }
+
+                TextField {
+                    id: txtDateTimeFormat
+                    enabled: false
+                    Layout.fillWidth: true
+                    objectName: "dateTimeFormat"
+                    placeholderText: qsTr("yyyy-MM-ddThh:mm:ss")
+                }
+
+                Label {
+                    id: lblUseTimeZone
+                    text: qsTr("\tUse timezone")
+                }
+
+                CheckBox {
+                    id: cbUseTimeZone
+                    enabled: false
+                    objectName: "useTimeZone"
+                    Layout.fillWidth: false
+                    checked: false
                 }
 
                 CheckBox {
@@ -155,8 +208,9 @@ ColumnLayout {
         }
 
         Tab {
-            id: tab3
+            id: tabShortcuts
             title: qsTr("Shortcuts")
+            visible: false
             active: true
 
             GridLayout {
@@ -171,6 +225,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblShowHide
                     text: qsTr("Shortcut to show/hide RedTimer")
                 }
 
@@ -182,6 +237,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblStartStop
                     text: qsTr("Shortcut to start/stop RedTimer")
                 }
 
@@ -193,6 +249,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblCreateTask
                     text: qsTr("Shortcut to create an issue")
                 }
 
@@ -204,6 +261,7 @@ ColumnLayout {
                 }
 
                 Label {
+                    id: lblLoadIssue
                     text: qsTr("Shortcut to load an issue")
                 }
 
@@ -222,7 +280,9 @@ ColumnLayout {
         }
 
         Tab {
-            id: tab4
+            id: tabInterface
+            y: 0
+            height: 0
             title: qsTr("Interface")
             active: true
 
@@ -258,24 +318,25 @@ ColumnLayout {
     }
 
     RowLayout {
+        y: 460
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignCenter
 
         Button {
-            id: save
+            id: btnSave
             objectName: "save"
             text: qsTr("&Save")
             isDefault: true
         }
 
         Button {
-            id: apply
+            id: btnApply
             objectName: "apply"
             text: qsTr("A&pply")
         }
 
         Button {
-            id: cancel
+            id: btnCancel
             objectName: "cancel"
             text: qsTr("&Cancel")
         }

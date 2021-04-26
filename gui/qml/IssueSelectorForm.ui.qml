@@ -5,13 +5,13 @@ import QtQuick.Layouts 1.2
 ColumnLayout {
     id: columnLayout1
 
-    property alias issues: issues
-    property alias project: project
-    property alias search: search
-    property alias assignee: assignee
+    property alias issues: lvIssues
+    property alias project: cmbProject
+    property alias search: txtSearch
+    property alias assignee: cmbAssignee
 
     ComboBox {
-        id: project
+        id: cmbProject
         Layout.fillWidth: true
         objectName: "project"
         model: projectModel
@@ -19,7 +19,7 @@ ColumnLayout {
     }
 
     ComboBox {
-        id: assignee
+        id: cmbAssignee
         Layout.fillWidth: true
         objectName: "assignee"
         model: assigneeModel
@@ -27,7 +27,7 @@ ColumnLayout {
     }
 
     ComboBox {
-        id: version
+        id: cmvVersion
         Layout.fillWidth: true
         objectName: "version"
         model: versionModel
@@ -35,7 +35,7 @@ ColumnLayout {
     }
 
     TextField {
-        id: search
+        id: txtSearch
         objectName: "search"
         Layout.fillWidth: true
         placeholderText: qsTr("Search in issue list")
@@ -43,19 +43,19 @@ ColumnLayout {
     }
 
     ListView {
-        id: issues
+        id: lvIssues
         boundsBehavior: Flickable.StopAtBounds
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
         clip: enabled
         objectName: "issues"
         model: issuesModel
 
-        signal activated( int index )
+        signal activated(int index)
 
         delegate: issueDelegate
 
         highlight: Rectangle {
-            color: "lightsteelblue";
+            color: "lightsteelblue"
             radius: 5
         }
 
@@ -63,8 +63,4 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
     }
-
-
-
 }
-

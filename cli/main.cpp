@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QRegularExpression>
 #include <QTimer>
+#include <QTranslator>
 
 #include <iostream>
 
@@ -18,14 +19,14 @@ bool
 parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions& options, qint32& profileId,
                   QString& errmsg )
 {
-    parser.setApplicationDescription( "RedTimer Command Line Interface" );
+    parser.setApplicationDescription( QObject::tr("RedTimer Command Line Interface") );
 
     // Commands
     QMap<QString,QString> commands;
-    commands.insert( "create", "Create a new issue" );
-    commands.insert( "issue",  "Get the current issue ID" );
-    commands.insert( "start",  "Start issue tracking" );
-    commands.insert( "stop",   "Stop issue tracking" );
+    commands.insert( "create", QObject::tr("Create a new issue") );
+    commands.insert( "issue",  QObject::tr("Get the current issue ID") );
+    commands.insert( "start",  QObject::tr("Start issue tracking") );
+    commands.insert( "stop",   QObject::tr("Stop issue tracking") );
 
     QStringList descr;
     QMapIterator<QString, QString> cmd( commands );
@@ -46,16 +47,16 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
     parser.addOption( {"profile-id", "Redmine instance to send the command to", "ID"} );
 
     // Command parameters
-    parser.addOption( {"assignee-id",        "Redmine assignee ID",      "ID"} );
-    parser.addOption( {"issue-id",           "Redmine issue ID",         "ID"} );
-    parser.addOption( {"parent-id",          "Redmine parent issue ID",  "ID"} );
-    parser.addOption( {"project-id",         "Redmine project ID",       "ID"} );
-    parser.addOption( {"tracker-id",         "Redmine tracker ID",       "ID"} );
-    parser.addOption( {"version-id",         "Redmine version ID",       "ID"} );
-    parser.addOption( {"external-id",        "External issue ID",        "text"} );
-    parser.addOption( {"external-parent-id", "External parent issue ID", "text"} );
-    parser.addOption( {"subject",            "Issue subject",            "text"} );
-    parser.addOption( {"description",        "Issue description",        "text"} );
+    parser.addOption( {"assignee-id",        QObject::tr("Redmine assignee ID"),      "ID"} );
+    parser.addOption( {"issue-id",           QObject::tr("Redmine issue ID"),         "ID"} );
+    parser.addOption( {"parent-id",          QObject::tr("Redmine parent issue ID"),  "ID"} );
+    parser.addOption( {"project-id",         QObject::tr("Redmine project ID"),       "ID"} );
+    parser.addOption( {"tracker-id",         QObject::tr("Redmine tracker ID"),       "ID"} );
+    parser.addOption( {"version-id",         QObject::tr("Redmine version ID"),       "ID"} );
+    parser.addOption( {"external-id",        QObject::tr("External issue ID"),        "text"} );
+    parser.addOption( {"external-parent-id", QObject::tr("External parent issue ID"), "text"} );
+    parser.addOption( {"subject",            QObject::tr("Issue subject"),            "text"} );
+    parser.addOption( {"description",        QObject::tr("Issue description"),        "text"} );
 
     // General parameters
     parser.addHelpOption();
@@ -78,13 +79,13 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
 
     if( positionalArguments.isEmpty() )
     {
-        errmsg = "No command specified.";
+        errmsg = QObject::tr("No command specified.");
         return false;
     }
 
     if( positionalArguments.size() > 1 )
     {
-        errmsg = "Several commands specified.";
+        errmsg = QObject::tr("Several commands specified.");
         return false;
     }
 
@@ -92,7 +93,7 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
 
     if( commands.find(options.command) == commands.end() )
     {
-        errmsg = QString("Command '%1' not found.").arg(options.command);
+        errmsg = QString(parser.tr("Command '%1' not found.")).arg(options.command);
         return false;
     }
 
@@ -107,7 +108,7 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
 
         if( !ok )
         {
-            errmsg = QString("Option '--%1' expects a numeric ID.").arg(option);
+            errmsg = QString(QObject::tr("Option '--%1' expects a numeric ID.")).arg(option);
             return false;
         }
 
@@ -123,7 +124,7 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
 
         if( !allowWhitespaces && str.contains( QRegularExpression("\\W")) )
         {
-            errmsg = QString("Option '--%1' must not contain whitespaces.").arg(option);
+            errmsg = QString(QObject::tr("Option '--%1' must not contain whitespaces.")).arg(option);
             return false;
         }
 
@@ -167,12 +168,12 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
     {
         if( allowed && !parser.isSet(option) )
         {
-            errmsg = QString("Option '--%1' required by command '%2'.").arg(option).arg(options.command);
+            errmsg = QString(QObject::tr("Option '--%1' required by command '%2'.")).arg(option).arg(options.command);
             return false;
         }
         else if( !allowed && parser.isSet(option) )
         {
-            errmsg = QString("Option '--%1' not allowed for command '%2'.").arg(option).arg(options.command);
+            errmsg = QString(QObject::tr("Option '--%1' not allowed for command '%2'.")).arg(option).arg(options.command);
             return false;
         }
 
@@ -221,7 +222,7 @@ parseCommandLine( QCoreApplication& app, QCommandLineParser& parser, CliOptions&
         // Exclusive
         if( parser.isSet("parent-id") && parser.isSet("external-parent-id") )
         {
-            errmsg = "Options '--parent-id' and '--external-parent-id' may not be combined.";
+            errmsg = QObject::tr("Options '--parent-id' and '--external-parent-id' may not be combined.");
             return false;
         }
     }
@@ -258,6 +259,10 @@ int main( int argc, char *argv[] )
     QCoreApplication app( argc, argv );
 
     app.setApplicationName( "RedTimerCLI" );
+
+    QTranslator myTranslator;
+    myTranslator.load("i18n\\redtimercli_" + QLocale::system().name());
+    app.installTranslator(&myTranslator);
 
     // Command line options
     QCommandLineParser parser;

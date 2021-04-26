@@ -22,7 +22,7 @@ IssueCreator::IssueCreator( SimpleRedmineClient* redmine, MainWindow* mainWindow
     // Issue selector window initialisation
     setModality( Qt::ApplicationModal );
     setFlags( Qt::Dialog );
-    setTitle( "Issue Creator" );
+    setTitle( tr("Issue Creator") );
     initHeight_ = height();
 
     // Set models
@@ -561,7 +561,7 @@ IssueCreator::loadParentIssueData()
             CBRETURN();
         }
 
-        qml("dueDate")->setProperty( "text", issue.dueDate.toString("yyyy-MM-dd") );
+        qml("dueDate")->setProperty( "text", issue.dueDate.toString(tr("yyyy-MM-dd")) );
 
         if( issue.assignedTo.id != NULL_ID )
         {
@@ -630,7 +630,7 @@ IssueCreator::loadProjects()
         int currentIndex = 0;
 
         projectModel_.clear();
-        projectModel_.push_back( SimpleItem(NULL_ID, "Choose project") );
+        projectModel_.push_back( SimpleItem(NULL_ID, tr("Choose project")) );
         for( const auto& project : projects )
         {
             if( projectId_ == project.id )
@@ -686,7 +686,7 @@ IssueCreator::loadTrackers()
         int currentIndex = 0;
 
         trackerModel_.clear();
-        trackerModel_.push_back( SimpleItem(NULL_ID, "Choose tracker") );
+        trackerModel_.push_back( SimpleItem(NULL_ID, tr("Choose tracker")) );
         for( const auto& tracker : project.trackers )
         {
             if( tracker.id == trackerId_ )
@@ -835,19 +835,19 @@ IssueCreator::save()
 
     if( projectId_ == NULL_ID )
     {
-        message( "Please select a project", QtCriticalMsg );
+        message( tr("Please select a project"), QtCriticalMsg );
         RETURN();
     }
 
     if( trackerId_ == NULL_ID )
     {
-        message( "Please select a tracker", QtCriticalMsg );
+        message( tr("Please select a tracker"), QtCriticalMsg );
         RETURN();
     }
 
     if( qml("subject")->property("text").toString().isEmpty() )
     {
-        message( "Please specify a subject", QtCriticalMsg );
+        message( tr("Please specify a subject"), QtCriticalMsg );
         RETURN();
     }
 

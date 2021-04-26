@@ -125,10 +125,10 @@ private:
     QDateTime lastStarted_;
 
     /// Quick pick placeholder text
-    const QString quickPick_ = "<Enter or select issue>";
+    const QString quickPick_ = "<Введите или выберите задачу>";
 
     /// Time entry placeholder text
-    const QString quickComment_ = "<Enter time entry comment>";
+    const QString quickComment_ = "<Введите комментарий>";
 
 private:
     /**

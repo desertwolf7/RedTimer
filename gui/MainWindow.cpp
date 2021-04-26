@@ -22,7 +22,7 @@ using namespace std;
 
 namespace redtimer {
 
-#define MSG_CANNOT_PROCEDE "Cannot procede without a connection"
+#define MSG_CANNOT_PROCEDE tr("Cannot procede without a connection")
 
 MainWindow::MainWindow( QApplication* parent, QString profileId )
     : Window( "MainWindow", this ),
@@ -38,7 +38,7 @@ MainWindow::MainWindow( QApplication* parent, QString profileId )
 
     // Main window initialisation
     installEventFilter( this );
-    setTitle( "RedTimer" );
+    setTitle( tr("RedTimer") );
 
     setWindowData( settings_->windowData()->mainWindow );
 
@@ -231,7 +231,11 @@ MainWindow::counterNoDiff()
 {
     ENTER();
 
-    int value = lastCounterUpdated_.secsTo(QDateTime::currentDateTimeUtc());
+    int value;
+    if (profileData()->useTimeZone)
+        value = lastCounterUpdated_.secsTo(QDateTime::currentDateTime());
+    else
+        value = lastCounterUpdated_.secsTo(QDateTime::currentDateTimeUtc());
 
     RETURN( value );
 }
@@ -262,7 +266,7 @@ MainWindow::createIssue()
     issueCreator->display();
 
     // Empty the issue information and set ID to NULL_ID
-    resetGui( "<New issue>" );
+    resetGui( tr("<New issue>") );
     issue_.id = NULL_ID;
 
     // Connect the issue selected signal to the setIssue slot
@@ -548,7 +552,7 @@ MainWindow::loadActivities()
         int currentIndex = 0;
 
         activityModel_.clear();
-        activityModel_.push_back( SimpleItem(NULL_ID, "Choose activity") );
+        activityModel_.push_back( SimpleItem(NULL_ID, tr("Choose activity")) );
         for( const auto& activity : activities )
         {
             if( activity.id == activityId_ )
@@ -587,7 +591,7 @@ MainWindow::loadIssueFromTextField()
     int issueId = qml("quickPick")->property("editText").toInt( &ok );
     if( !ok )
     {
-        message( "Issue ID may consist of digits only", QtWarningMsg );
+        message( tr("Issue ID may consist of digits only"), QtWarningMsg );
         RETURN();
     }
 
@@ -648,7 +652,7 @@ MainWindow::loadIssue( int issueId, bool startTimer, bool saveNewIssue )
 
         addRecentIssue( issue );
 
-        qml("issueId")->setProperty( "text", QString("Issue ID: %1").arg(issue.id) );
+        qml("issueId")->setProperty( "text", QString(tr("Issue ID: %1")).arg(issue.id) );
         qml("issueId")->setProperty( "cursorPosition", 0 );
         qml("subject")->setProperty( "text", issue.subject );
         qml("subject")->setProperty( "cursorPosition", 0 );
@@ -656,13 +660,13 @@ MainWindow::loadIssue( int issueId, bool startTimer, bool saveNewIssue )
 
         QString more;
         if( issue.tracker.id != NULL_ID )
-            more.append( QString("<b>Tracker:</b> %1<br>").arg(issue.tracker.name) );
+            more.append( QString(tr("<b>Tracker:</b> %1<br>")).arg(issue.tracker.name) );
         if( issue.category.id != NULL_ID )
-            more.append( QString("<b>Category:</b> %1<br>").arg(issue.category.name) );
+            more.append( QString(tr("<b>Category:</b> %1<br>")).arg(issue.category.name) );
         if( issue.version.id != NULL_ID )
-            more.append( QString("<b>Target version:</b> %1<br>").arg(issue.version.name) );
+            more.append( QString(tr("<b>Target version:</b> %1<br>")).arg(issue.version.name) );
         if( issue.parentId != NULL_ID )
-            more.append( QString("<b>Parent issue ID:</b> %1<br>").arg(issue.parentId) );
+            more.append( QString(tr("<b>Parent issue ID:</b> %1<br>")).arg(issue.parentId) );
 
         QString customFields;
         bool displayCustomFields = false;
@@ -748,7 +752,7 @@ MainWindow::loadIssueStatuses()
         int currentIndex = 0;
 
         issueStatusModel_.clear();
-        issueStatusModel_.push_back( SimpleItem(NULL_ID, "Choose issue status") );
+        issueStatusModel_.push_back( SimpleItem(NULL_ID, tr("Choose issue status")) );
         for( const auto& issueStatus : issueStatuses )
         {
             if( issueStatus.id == issue_.status.id )
@@ -925,7 +929,7 @@ MainWindow::loadOrCreateIssue( CliOptions options )
             {
                 if( profileData()->externalIdFieldId == NULL_ID )
                 {
-                    message( "Cannot load existing parent issue: No external ID field specified.",
+                    message( tr("Cannot load existing parent issue: No external ID field specified."),
                              QtCriticalMsg );
 
                     semaphore->release();
@@ -974,7 +978,7 @@ MainWindow::loadOrCreateIssue( CliOptions options )
     {
         if( profileData()->externalIdFieldId == NULL_ID )
         {
-            message( "Cannot load existing issue: No external ID field specified.", QtCriticalMsg );
+            message( tr("Cannot load existing issue: No external ID field specified."), QtCriticalMsg );
 
             semaphore->release();
             delete semaphore;
@@ -1041,7 +1045,7 @@ MainWindow::notifyConnectionStatus( QNetworkAccessManager::NetworkAccessibility 
             refreshGui();
         }
 
-        qml("connectionStatus")->setProperty("tooltip", "Connection established" );
+        qml("connectionStatus")->setProperty("tooltip", tr("Connection established") );
         qml("connectionStatusStyle")->setProperty("color", "lightgreen" );
 
         if( !timer_->isActive() && counterGui() != 0 )
@@ -1051,7 +1055,7 @@ MainWindow::notifyConnectionStatus( QNetworkAccessManager::NetworkAccessibility 
     {
         connected_ = false;
 
-        qml("connectionStatus")->setProperty("tooltip", "Connection not available" );
+        qml("connectionStatus")->setProperty("tooltip", tr("Connection not available") );
         qml("connectionStatusStyle")->setProperty("color", "red" );
     }
 
@@ -1315,8 +1319,16 @@ MainWindow::startTimer()
 
     timer_->start();
 
-    lastCounterUpdated_ = QDateTime::currentDateTimeUtc();
-    lastStarted_ = QDateTime::currentDateTimeUtc();
+    if (profileData()->useTimeZone)
+    {
+        lastCounterUpdated_ = QDateTime::currentDateTime();
+        lastStarted_ = lastCounterUpdated_;
+    }
+    else
+    {
+        lastCounterUpdated_ = QDateTime::currentDateTimeUtc();
+        lastStarted_ = lastCounterUpdated_;
+    }
 
     // Set the start/stop button icon to stop
     qml("startStop")->setProperty( "iconSource", "qrc:/open-iconic/svg/media-stop.svg" );
@@ -1338,7 +1350,12 @@ MainWindow::stop( bool resetTimerOnError, bool stopTimerAfterSaving, SuccessCb c
 {
     ENTER();
 
-    QDateTime cur = QDateTime::currentDateTimeUtc();
+    QDateTime cur;
+    if (profileData()->useTimeZone)
+     cur = QDateTime::currentDateTime();
+    else
+     cur = QDateTime::currentDateTimeUtc();
+
     counterDiff_ += lastCounterUpdated_.secsTo( cur );
     lastCounterUpdated_ = cur;
 
@@ -1390,10 +1407,16 @@ MainWindow::stop( bool resetTimerOnError, bool stopTimerAfterSaving, SuccessCb c
             RETURN();
         };
 
-        QString timeFormat = "yyyy-MM-ddTHH:mm:ss";
+        QString timeFormat = profileData()->dateTimeFormat;
+        if(QDateTime::currentDateTime().toString(timeFormat) == "") // Invalid format string
+            timeFormat = "yyyy-MM-ddThh:mm:ss";
+
         addCustomField( data->startTimeFieldId, lastStarted_.toString(timeFormat) );
-        addCustomField( data->endTimeFieldId,
-                        QDateTime::currentDateTimeUtc().toString(timeFormat) );
+
+        if (profileData()->useTimeZone)
+           addCustomField( data->endTimeFieldId, QDateTime::currentDateTime().toString(timeFormat) );
+        else
+           addCustomField( data->endTimeFieldId, QDateTime::currentDateTimeUtc().toString(timeFormat) );
     }
 
     // Stop the timer for now - might be started again later
@@ -1546,7 +1569,7 @@ MainWindow::updateTitle()
     {
         if( issue_.id != NULL_ID )
         {
-            title.append( QString("\n\nIssue ID: %1").arg(issue_.id) );
+            title.append( QString(tr("\n\nIssue ID: %1")).arg(issue_.id) );
             if( !issue_.subject.isEmpty() )
                 title.append( QString("\n%2").arg(issue_.subject) );
         }

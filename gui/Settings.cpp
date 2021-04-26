@@ -21,7 +21,7 @@ ProfileData::isValid( QString* errmsg ) const
     bool result = !url.isEmpty() && !apiKey.isEmpty();
 
     if( !result && errmsg )
-        *errmsg = "Redmine URL and API key required";
+        *errmsg = QObject::tr("Redmine URL and API key required");
 
     RETURN( result );
 }
@@ -69,7 +69,7 @@ Settings::Settings( MainWindow* mainWindow, const QString& profile )
     // Settings window initialisation
     setModality( Qt::ApplicationModal );
     setFlags( Qt::Dialog );
-    setTitle( "Settings" );
+    setTitle( tr("Settings") );
 
     // Set the models
     setCtxProperty( "issueStatusModel", &issueStatusModel_ );
@@ -174,6 +174,10 @@ Settings::applyProfileData( bool* reload )
     data->startLocalServer  = qml("startLocalServer")->property("checked").toBool();
     data->url               = qml("url")->property("text").toString();
     data->useCustomFields   = qml("useCustomFields")->property("checked").toBool();
+    data->dateTimeFormat    = qml("dateTimeFormat")->property("text").toString();
+    data->useTimeZone       = qml("useTimeZone")->property("checked").toBool();
+
+
 
     // Shortcuts
     data->shortcutCreateIssue = qml("shortcutCreateIssue")->property("text").toString();
@@ -220,6 +224,7 @@ Settings::applyProfileData( bool* reload )
             int endTimeFieldId = qml("endTime")->property("currentIndex").toInt();
             data->endTimeFieldId = endTimeModel_.at(endTimeFieldId).id();
         }
+
     }
     else
     {
@@ -231,6 +236,8 @@ Settings::applyProfileData( bool* reload )
         data->externalIdFieldId = NULL_ID;
         data->startTimeFieldId = NULL_ID;
         data->endTimeFieldId   = NULL_ID;
+        data->dateTimeFormat   = NULL_ID;
+        data->useTimeZone = false;
 
         while( !data->recentIssues.isEmpty() )
             data->recentIssues.removeLast();
@@ -382,6 +389,10 @@ Settings::loadProfileData()
     data->endTimeFieldId = settings_.value("endTimeFieldId").isValid()
                           ? settings_.value("endTimeFieldId").toInt()
                           : NULL_ID;
+    data->dateTimeFormat =  settings_.value("dateTimeFormat").toString();
+    data->useTimeZone = settings_.value("useTimeZone").isValid()
+                           ? settings_.value("useTimeZone").toBool()
+                           : false;
 
     // Shortcuts
     data->shortcutCreateIssue = settings_.value("shortcutCreateIssue").isValid()
@@ -526,6 +537,9 @@ Settings::saveProfileData()
     settings_.setValue( "externalIdFieldId", data->externalIdFieldId );
     settings_.setValue( "startTimeFieldId",  data->startTimeFieldId );
     settings_.setValue( "endTimeFieldId",    data->endTimeFieldId );
+    settings_.setValue( "dateTimeFormat",    data->dateTimeFormat );
+    settings_.setValue( "useTimeZone",    data->useTimeZone );
+
 
     settings_.setValue( "activity", data->activityId );
     settings_.setValue( "issue",    data->issueId );
@@ -579,7 +593,7 @@ Settings::updateIssueStatuses()
     if( !profileData()->isValid() )
     {
         issueStatusModel_.clear();
-        issueStatusModel_.push_back( SimpleItem(NULL_ID, "URL and API key required") );
+        issueStatusModel_.push_back( SimpleItem(NULL_ID, tr("URL and API key required")) );
 
         qml("workedOn")->setProperty( "enabled", false );
         qml("workedOn")->setProperty( "currentIndex", -1 );
@@ -615,7 +629,7 @@ Settings::updateIssueStatuses()
                []( const IssueStatus& a, const IssueStatus& b ){ return a.id < b.id; } );
 
         issueStatusModel_.clear();
-        issueStatusModel_.push_back( SimpleItem(NULL_ID, "Choose issue status") );
+        issueStatusModel_.push_back( SimpleItem(NULL_ID, tr("Choose issue status")) );
         for( const auto& issueStatus : issueStatuses )
         {
             if( issueStatus.id == profileData()->workedOnId )
@@ -643,14 +657,19 @@ Settings::updateIssueCustomFields()
 
     bool useCustomFields = qml("useCustomFields")->property("checked").toBool();
 
+    qml("dateTimeFormat")->setProperty( "text", profileData()->dateTimeFormat );
+    qml("dateTimeFormat")->setProperty( "enabled", useCustomFields );
+    qml("useTimeZone")->setProperty( "checked", profileData()->useTimeZone );
+    qml("useTimeZone")->setProperty( "enabled", useCustomFields );
+
     if( !profileData()->isValid() || !useCustomFields )
     {
         QString err;
 
         if( useCustomFields )
-            err = "URL and API key required";
+            err = tr("URL and API key required");
         else
-            err = "Custom fields not enabled";
+            err = tr("Custom fields not enabled");
 
         externalIdModel_.clear();
         externalIdModel_.push_back( SimpleItem(NULL_ID, err) );
@@ -689,9 +708,9 @@ Settings::updateIssueCustomFields()
         QString firstEntry;
 
         if( customFields.size() )
-            firstEntry = "Choose issue field";
+            firstEntry = tr("Choose issue field");
         else
-            firstEntry = "No issue fields found";
+            firstEntry = tr("No issue fields found");
 
         int externalIdCurrentIndex = 0;
         externalIdModel_.clear();
@@ -731,9 +750,9 @@ Settings::updateTimeEntryCustomFields()
         QString err;
 
         if( useCustomFields )
-            err = "URL and API key required";
+            err = tr("URL and API key required");
         else
-            err = "Custom fields not enabled";
+            err = tr("Custom fields not enabled");
 
         startTimeModel_.clear();
         startTimeModel_.push_back( SimpleItem(NULL_ID, err) );
@@ -778,9 +797,9 @@ Settings::updateTimeEntryCustomFields()
         QString firstEntry;
 
         if( customFields.size() )
-            firstEntry = "Choose time entry field";
+            firstEntry = tr("Choose time entry field");
         else
-            firstEntry = "No time entry fields found";
+            firstEntry = tr("No time entry fields found");
 
         startTimeModel_.clear();
         endTimeModel_.clear();
@@ -828,7 +847,7 @@ Settings::updateTrackers()
     if( !profileData()->isValid() )
     {
         trackerModel_.clear();
-        trackerModel_.push_back( SimpleItem(NULL_ID, "URL and API key required") );
+        trackerModel_.push_back( SimpleItem(NULL_ID, tr("URL and API key required")) );
 
         qml("defaultTracker")->setProperty( "enabled", false );
         qml("defaultTracker")->setProperty( "currentIndex", -1 );
@@ -863,7 +882,7 @@ Settings::updateTrackers()
                []( const Tracker& a, const Tracker& b ){ return a.id < b.id; } );
 
         trackerModel_.clear();
-        trackerModel_.push_back( SimpleItem(NULL_ID, "Choose tracker") );
+        trackerModel_.push_back( SimpleItem(NULL_ID, tr("Choose tracker")) );
         for( const auto& tracker : trackers )
         {
             if( tracker.id == profileData()->defaultTrackerId )

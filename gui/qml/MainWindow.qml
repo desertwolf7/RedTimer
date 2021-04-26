@@ -41,7 +41,7 @@ Item {
                 mainForm.quickPick.editText=""
             }
             else {
-                mainForm.quickPick.editText="<Enter or select issue>"
+                mainForm.quickPick.editText="<Введите или выберите задачу>"
             }
         }
     }

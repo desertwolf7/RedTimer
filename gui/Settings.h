@@ -81,6 +81,12 @@ struct ProfileData
     /// ID of the time entry custom field for the end time
     int endTimeFieldId;
 
+    /// Date and time format
+    QString dateTimeFormat;
+
+    /// Use timezone for start and end time
+    bool useTimeZone;
+
     /// @}
 
     /// @name Internal settings

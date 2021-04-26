@@ -54,18 +54,18 @@ CommandSender::readFromSocket( QLocalSocket* socket, const CliOptions& options )
             if( optionsIn.command == "issue" )
             {
                 if( optionsIn.issueId != NULL_ID )
-                    cout << serverName << ": Current issue ID: " << optionsIn.issueId << endl;
+                    cout << serverName << tr(": Current issue ID: ").toStdString() << optionsIn.issueId << endl;
                 else
-                    cout << serverName << ": No issue currently selected" << endl;
+                    cout << serverName << tr(": No issue currently selected").toStdString() << endl;
             }
             else
             {
-                cout << serverName << ": Successfully sent command " << options.command.toStdString() << endl;
+                cout << serverName << tr(": Successfully sent command ").toStdString() << options.command.toStdString() << endl;
             }
         }
         else
         {
-            cout << serverName << ": Could not send command " << options.command.toStdString() << endl;
+            cout << serverName << tr(": Could not send command ").toStdString() << options.command.toStdString() << endl;
         }
 
         socket->disconnectFromServer();
@@ -138,7 +138,7 @@ CommandSender::sendToSocket( QLocalSocket* socket, const CliOptions& options )
 {
     ENTER()(socket)(options);
 
-    cout << socket->serverName().toStdString() << ": Sending command " << options.command.toStdString()
+    cout << socket->serverName().toStdString() << tr(": Sending command ").toStdString() << options.command.toStdString()
          << endl;
 
     QByteArray block = CliOptions::serialise( options );
